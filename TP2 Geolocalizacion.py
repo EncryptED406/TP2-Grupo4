@@ -1,4 +1,5 @@
 import csv
+from geopy.geocoders import Nominatim
 
 def lectura_archivo(archivo:str)->list:
     denuncias:list=[]
@@ -23,7 +24,24 @@ def escribir_archivo(denuncias_procesadas:list):
     except:
         print("Se produjo un error al generar el archivo")
 
-        
+def conseguir_direccion(latitud:str,longitud:str)->str:
+    
+    geolocator= Nominatim(user_agent="TP2")
+    direccion_de_infraccion=str(geolocator.reverse(latitud+","+longitud))
+
+    return(direccion_de_infraccion)
+
+def crear_lista_direcciones(latitud:list,longitud:list)->list:
+#Recibe las listas latitud y longitud, las procesa con geopy y consigue la direccion, devuelve una lista      
+    direcciones:list=[]
+    geolocator= Nominatim(user_agent="TP2")
+    
+    for registro in range (len(latitud)):
+        direccion_de_infraccion:str=str(conseguir_direccion(latitud[registro],longitud[registro]))
+        direcciones.append(direccion_de_infraccion)
+
+    return(direcciones)
+
 def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->None:
 
     for registro in range(len(datos_Brutos)):
