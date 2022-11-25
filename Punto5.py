@@ -1,5 +1,7 @@
 #def patente_sospechosa("punto2.csv"):
-#De aca saco la ubicacion
+#De aca saco la ubicacion y la fecha. 
+#No arme la funcion porque todavia no se si voy a recibir un archivo csv o una lista.
+#El codigo esta hecho para que reciba una archivo csv pero se puede cambiar.
 
 import csv
 
@@ -33,8 +35,6 @@ patentes_alerta: dict = {}
 for informacion in datos:
 	if informacion[5] in patentes_buscada:
 		patentes_alerta[informacion[5]] = [informacion[0],informacion[2]]
-
-#print(patentes_alerta)
 
 #Devuelve diccionario. Clave = Patente. Contenido = fecha, calle
 
