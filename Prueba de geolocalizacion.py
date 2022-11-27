@@ -1,5 +1,6 @@
 import csv
 from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
 
 def leer_archivo(archivo:str)->list:
     denuncias:list=[]
@@ -25,9 +26,11 @@ def escribir_csv(denuncias_procesadas:list):
         print("Se produjo un error al generar el archivo")
 
 def conseguir_direccion(latitud:str,longitud:str)->str:
-    #Recibe 2 strings con las coordenadas  y devuelve otro con la direccion    
+    #Recibe 2 strings con las coordenadas  y devuelve otro con la direccion
+    # La mayoria de las lineas son "magia" de Geopy el rateLimitar demora las llamas a al proveedor para evitar q las deniegue    
     geolocator= Nominatim(user_agent="TP2")
-    direccion_de_infraccion=str(geolocator.reverse(latitud+","+longitud))
+    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+    direccion_de_infraccion=(str(geolocator.reverse(latitud+","+longitud))).apply(geocode)
 
     return(direccion_de_infraccion)
 
@@ -56,9 +59,16 @@ def mostrar_lista(lista:list):
 def conseguir_coordenadas(direccion:str)->list:
     #devuelve las coordenadas de la direccion indicada como una lista cuyos elementos son float
     geolocator= Nominatim(user_agent="TP2")
-    lat=float(geolocator.geocode(direccion).point.latitude)
-    lon=float(geolocator.geocode(direccion).point.longitude)
-    coordenadas:list=[lat,lon]
+    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+
+    try:
+        lat=(float(geolocator.geocode(direccion).point.latitude)).apply(geocode)
+        lon=(float(geolocator.geocode(direccion).point.longitude)).apply(geocode)
+        coordenadas:list=[lat,lon]
+    except TimeoutError: 
+        print ("Hubo un error al conseguir los datos, verifique su conexion.")
+    except:
+        print( "No se pudo localizar esa dirección.")
     return(coordenadas)
 
 def delimitar_zona_centro ()->list:
@@ -73,7 +83,7 @@ def delimitar_zona_centro ()->list:
     return zona_centro
 
 def infraciones_del_centro(infracciones_procesadas:list):
-#Recibe la lista procesada, obtiene las coordenadas y define si estan o no en un cierto area
+#Recibe la lista procesada, decide si estan o no en el area y muesta por pantalla aquellas q lo estan 
     zona_centro:list=delimitar_zona_centro()
 
     for registro in len(infracciones_procesadas):
@@ -83,8 +93,9 @@ def infraciones_del_centro(infracciones_procesadas:list):
 
         #la condicion del if basicamente pide que se encuentre dentro del rectangulo  
         if ((lat<zona_centro[2],[0] and lat> zona_centro[0],[0]) and (lon<zona_centro[2] and lon<zona_centro[1])):
-
-
+            for registro in infracciones_procesadas:
+                print(registro)
+    
 def infracciones_por_cercania (lat_centro:str,long_centro:str, infracciones:list):
     pass
 
@@ -101,6 +112,8 @@ def main()->None:
     rutas_fotos: list = []
 
     obtener_Datos(datos_Brutos, latitud, longitud, rutas_audios, rutas_fotos)
+
+############ DESDE aca, Bloque exclusivo para testear si funciona la parte de geolocalizacion, no va en el main #############
     mostrar_lista(latitud)
     mostrar_lista(longitud)
     mostrar_lista(rutas_audios)
@@ -108,6 +121,7 @@ def main()->None:
 
     direcciones=crear_lista_direcciones(latitud,longitud)
     
+############ HASTA aca,Bloque exclusivo para testear si funciona la parte de geolocalizacion, no va en el main #############
     #direcciones, patentes, descripciones = procesar_Datos(latitud, longitud, rutas_audios, rutas_fotos)# obtiene datos procesados de Dirección, descripción, patentes
 
     #escribir_csv() 
