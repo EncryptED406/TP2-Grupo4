@@ -1,4 +1,5 @@
 import csv
+import speech_recognition as sr
 
 def lectura_archivo(archivo:str)->list:
     denuncias:list=[]
@@ -23,6 +24,18 @@ def escribir_archivo(denuncias_procesadas:list):
     except:
         print("Se produjo un error al generar el archivo")
 
+def obtener_descripcion_audio(rutas_audios:list)->list:
+    descripciones: list = []
+    for ruta in range(len(rutas_audios)):
+        r = sr.Recognizer()
+
+        with sr.AudioFile(rutas_audios[ruta]) as source:
+            audio = r.record(source)
+        
+        descripcion: str = r.recognize_google(audio)
+        descripciones.append(descripcion)
+    
+    return descripciones
         
 def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->None:
 
