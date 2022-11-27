@@ -119,6 +119,7 @@ def main()->None:
     mostrar_lista(rutas_audios)
     mostrar_lista(rutas_fotos)
 
+    
     direcciones=crear_lista_direcciones(latitud,longitud)
     
 ############ HASTA aca,Bloque exclusivo para testear si funciona la parte de geolocalizacion, no va en el main #############
