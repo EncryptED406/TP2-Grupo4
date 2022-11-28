@@ -1,0 +1,10 @@
+timestamp,celular,latitud,longitud,foto,descripcion, audio
+1575158400,1157626305,-34.6262357,-58.4444104,ruta_foto,"auto sobre rampa para discapacitados",ruta_audio
+1668909677,1157626305,-34.7466444,-58.3373346,ruta_foto,"auto obstruyendo entrada de garage",ruta_audio
+1589709677,1157626305,-34.6174679,-58.369979,ruta_foto,"mal estacionado",ruta_audio
+1659799677,1157626305,-34.6393256,-58.3648694,ruta_foto,"auto estacionado sobre la vereda",ruta_audio
+1660809877,1157626305,-34.5423882,-58.4481785,ruta_foto,"auto estacionado sobre la vereda",ruta_audio
+1661809877,1165980433,-34.7580789,-58.2780747,ruta_foto,"auto ocupando 2 plazas de estacionamiento",ruta_audio
+1489709677,1157626305,-34.6091614,-58.3941354,ruta_foto,"mal estacionado",ruta_audio
+1499709677,1157626305,-34.6082968,-58.3929361,ruta_foto,"pesimamente estacionado",ruta_audio
+1499709677,1157626305,-34.604217,-58.3803404,ruta_foto,"auto sobre la vereda",ruta_audio
