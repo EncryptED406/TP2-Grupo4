@@ -98,7 +98,7 @@ def infraciones_del_centro(infracciones_procesadas:list):
                 print(registro)
     
 def infracciones_estadios(infracciones:list):
-#Recibe la lista de infracciones
+#Recibe la lista de infracciones, muestra las 
     infracciones_bombonera:list=[]
     infracciones_monumental:list=[]
     bombonera:list=conseguir_coordenadas("estadio Alberto J. Armando")
@@ -110,11 +110,14 @@ def infracciones_estadios(infracciones:list):
             infracciones_bombonera.append(infracciones[registro])
         elif (geodesic(monumental, coord_infraccion).kilometers<1):
             infracciones_monumental.append(infracciones[registro])
-
+    
     print ("Las siguientes infracciones se produjeron en las inmediaciones del estadio 'Alberto J. Armando'")
-    print(infracciones_bombonera)
+    for item in infracciones_bombonera:
+        print(item)
     print ("Las siguientes infracciones se produjeron en las inmediaciones del estadio 'Mas Monumental'")
-    print(infracciones_monumental)
+    for item in infracciones_monumental:
+        print(item)
+    
     return
 
 # def procesar_Datos(latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->list:
@@ -132,11 +135,7 @@ def main()->None:
     obtener_Datos(datos_Brutos, latitud, longitud, rutas_audios, rutas_fotos)
 
 ############ DESDE aca, Bloque exclusivo para testear si funciona la parte de geolocalizacion, no va en el main #############
-    mostrar_lista(latitud)
-    mostrar_lista(longitud)
-    mostrar_lista(rutas_audios)
-    mostrar_lista(rutas_fotos)
-
+   
     
     direcciones=crear_lista_direcciones(latitud,longitud)
     
