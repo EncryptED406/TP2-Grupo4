@@ -1,6 +1,7 @@
 import csv
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
+from geopy.distance import geodesic
 
 def leer_archivo(archivo:str)->list:
     denuncias:list=[]
@@ -52,7 +53,7 @@ def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audio
         rutas_audios.append(datos_Brutos[registro][6])
         rutas_fotos.append(datos_Brutos[registro][4])
 
-def mostrar_lista(lista:list):
+def mostrar_lista(lista:list): 
     print ("los items de la lista son:")
     print(lista)
 
@@ -96,8 +97,25 @@ def infraciones_del_centro(infracciones_procesadas:list):
             for registro in infracciones_procesadas:
                 print(registro)
     
-def infracciones_por_cercania (lat_centro:str,long_centro:str, infracciones:list):
-    pass
+def infracciones_estadios(infracciones:list):
+#Recibe la lista de infracciones
+    infracciones_bombonera:list=[]
+    infracciones_monumental:list=[]
+    bombonera:list=conseguir_coordenadas("estadio Alberto J. Armando")
+    monumental:list=conseguir_coordenadas("estadio Monumental")
+
+    for registro in range (len(infracciones)):
+        coord_infraccion:list=conseguir_coordenadas(infracciones[registro][2])
+        if (geodesic(bombonera, coord_infraccion).kilometers<1):
+            infracciones_bombonera.append(infracciones[registro])
+        elif (geodesic(monumental, coord_infraccion).kilometers<1):
+            infracciones_monumental.append(infracciones[registro])
+
+    print ("Las siguientes infracciones se produjeron en las inmediaciones del estadio 'Alberto J. Armando'")
+    print(infracciones_bombonera)
+    print ("Las siguientes infracciones se produjeron en las inmediaciones del estadio 'Mas Monumental'")
+    print(infracciones_monumental)
+    return
 
 # def procesar_Datos(latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->list:
 #     obtener_direccion(latitud, longitud) # devuelve lista de dirección tras procesar latitud y longitud
