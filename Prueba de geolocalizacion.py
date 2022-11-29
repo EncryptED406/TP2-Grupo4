@@ -1,6 +1,5 @@
 import csv
 from geopy.geocoders import Nominatim
-from geopy.extra.rate_limiter import RateLimiter
 from geopy.distance import geodesic
 
 def leer_archivo(archivo:str)->list:
@@ -26,13 +25,14 @@ def escribir_csv(denuncias_procesadas:list):
     except:
         print("Se produjo un error al generar el archivo")
 
-def conseguir_direccion(latitud:str,longitud:str)->str:
-    #Recibe 2 strings con las coordenadas  y devuelve otro con la direccion
-    # La mayoria de las lineas son "magia" de Geopy el rateLimitar demora las llamas a al proveedor para evitar q las deniegue    
-    geolocator= Nominatim(user_agent="TP2")
-    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
-    direccion_de_infraccion=(str(geolocator.reverse(latitud+","+longitud))).apply(geocode)
 
+def conseguir_direccion(latitud:str,longitud:str)->str:
+    #Recibe 2 strings con las coordenadas  y devuelve otro con la direccion    
+    geolocator= Nominatim(user_agent="TP2")
+    try:
+        direccion_de_infraccion=(str(geolocator.reverse(str(latitud)+","+str(longitud))))
+    except TimeoutError:
+        print("No se pudo acceder al proveedor para obtener los datos")
     return(direccion_de_infraccion)
 
 def crear_lista_direcciones(latitud:list,longitud:list)->list:
@@ -53,23 +53,17 @@ def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audio
         rutas_audios.append(datos_Brutos[registro][6])
         rutas_fotos.append(datos_Brutos[registro][4])
 
-def mostrar_lista(lista:list): 
-    print ("los items de la lista son:")
-    print(lista)
-
 def conseguir_coordenadas(direccion:str)->list:
     #devuelve las coordenadas de la direccion indicada como una lista cuyos elementos son float
     geolocator= Nominatim(user_agent="TP2")
-    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
-
     try:
-        lat=(float(geolocator.geocode(direccion).point.latitude)).apply(geocode)
-        lon=(float(geolocator.geocode(direccion).point.longitude)).apply(geocode)
+        lat=float(geolocator.geocode(direccion).point.latitude)
+        lon=float(geolocator.geocode(direccion).point.longitude)
         coordenadas:list=[lat,lon]
     except TimeoutError: 
         print ("Hubo un error al conseguir los datos, verifique su conexion.")
     except:
-        print( "No se pudo localizar esa dirección.")
+        print( "No se pudo localizar la dirección.")       
     return(coordenadas)
 
 def delimitar_zona_centro ()->list:
@@ -84,7 +78,7 @@ def delimitar_zona_centro ()->list:
     return zona_centro
 
 def infracciones_del_centro(infracciones_procesadas:list):
-#Recibe la lista procesada, decide si estan o no en el area y muesta por pantalla aquellas q lo estan 
+#Recibe la lista procesada, decide si la direccion esta o no en el area y muesta por pantalla aquellas q lo estan 
     zona_centro:list=delimitar_zona_centro()
     infracciones_zona_centro:list=[]
 
@@ -138,18 +132,22 @@ def main()->None:
 
 ############ DESDE aca, Bloque exclusivo para testear si funciona la parte de geolocalizacion, no va en el main #############
    
-    
     #direcciones=crear_lista_direcciones(latitud,longitud)
     
-    #infracciones:list=[["nombre1","telefono1","victor martinez 354,caballito"],
+    #infracciones_prueba:list=[["nombre1","telefono1","victor martinez 354,caballito"],
                     # ["nombre2","telefono2","caminito,La Boca"],
                     # ["nombre3","telefono3","Ernesto A. Bavio 3150 ,nuñez"],
                     # ["nombre4","telefono4","Uruguay 635, Tribunales"],
                     # ["nombre4","telefono5","Teatro Colón, San Nicolas"]]
 
+    #lista=delimitar_zona_centro()
 
-    #infracciones_del_centro(infracciones)
-    #infracciones_estadios(infracciones)    
+    #for i in range (len(lista)):
+        #print(conseguir_direccion(lista[i][0],lista[i][1]))
+
+    #infracciones_del_centro(infracciones_prueba)
+    #infracciones_estadios(infracciones_prueba)
+        
 ############ HASTA aca,Bloque exclusivo para testear si funciona la parte de geolocalizacion, no va en el main #############
     #direcciones, patentes, descripciones = procesar_Datos(latitud, longitud, rutas_audios, rutas_fotos)# obtiene datos procesados de Dirección, descripción, patentes
 
