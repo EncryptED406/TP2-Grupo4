@@ -83,19 +83,21 @@ def delimitar_zona_centro ()->list:
 
     return zona_centro
 
-def infraciones_del_centro(infracciones_procesadas:list):
+def infracciones_del_centro(infracciones_procesadas:list):
 #Recibe la lista procesada, decide si estan o no en el area y muesta por pantalla aquellas q lo estan 
     zona_centro:list=delimitar_zona_centro()
+    infracciones_zona_centro:list=[]
 
-    for registro in len(infracciones_procesadas):
+    for registro in range (len(infracciones_procesadas)):
         coordenadas_infraccion:list=conseguir_coordenadas(infracciones_procesadas[registro][2])
-        lat:float=coordenadas_infraccion[0]#esto lo pongo para facilitar la lectura del codigo        
-        lon:float=coordenadas_infraccion[1]#esto lo pongo para facilitar la lectura del codigo
+        lat:float=float(coordenadas_infraccion[0])#esto lo pongo para facilitar la lectura del "if" q sigue a continuacion         
+        lon:float=float(coordenadas_infraccion[1])#esto lo pongo para facilitar la lectura del "if" q sigue a continuacion
+        #la condicion del if basicamente pide que se encuentre dentro del rectangulo delimitado por las calles dadas
+        if ((lat>(zona_centro[0][0]) and lat<(zona_centro[1][0])) and (lon>(zona_centro[1][1]) and lon<(zona_centro[2][1]))):
+            infracciones_zona_centro.append(infracciones_procesadas[registro])
 
-        #la condicion del if basicamente pide que se encuentre dentro del rectangulo  
-        if ((lat<zona_centro[2],[0] and lat> zona_centro[0],[0]) and (lon<zona_centro[2] and lon<zona_centro[1])):
-            for registro in infracciones_procesadas:
-                print(registro)
+    for registro in infracciones_zona_centro:
+        print (registro)
     
 def infracciones_estadios(infracciones:list):
 #Recibe la lista de infracciones, muestra las 
@@ -137,8 +139,17 @@ def main()->None:
 ############ DESDE aca, Bloque exclusivo para testear si funciona la parte de geolocalizacion, no va en el main #############
    
     
-    direcciones=crear_lista_direcciones(latitud,longitud)
+    #direcciones=crear_lista_direcciones(latitud,longitud)
     
+    #infracciones:list=[["nombre1","telefono1","victor martinez 354,caballito"],
+                    # ["nombre2","telefono2","caminito,La Boca"],
+                    # ["nombre3","telefono3","Ernesto A. Bavio 3150 ,nuñez"],
+                    # ["nombre4","telefono4","Uruguay 635, Tribunales"],
+                    # ["nombre4","telefono5","Teatro Colón, San Nicolas"]]
+
+
+    #infracciones_del_centro(infracciones)
+    #infracciones_estadios(infracciones)    
 ############ HASTA aca,Bloque exclusivo para testear si funciona la parte de geolocalizacion, no va en el main #############
     #direcciones, patentes, descripciones = procesar_Datos(latitud, longitud, rutas_audios, rutas_fotos)# obtiene datos procesados de Dirección, descripción, patentes
 
