@@ -49,12 +49,16 @@ def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audio
         rutas_audios.append(datos_Brutos[registro][6])
         rutas_fotos.append(datos_Brutos[registro][4])
 
+def obtener_datos_Procesados(datos_Brutos:list, fecha:list, direccion:list, localidad:list, provincia:list, patentes:list, descripciones_audios:list)->list:
+    pass
 
-def procesar_Datos(latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->list:
-    obtener_direccion(latitud, longitud) # devuelve lista de dirección tras procesar latitud y longitud
-    obtener_patente(rutas_fotos) # devuelve lista de patentes tras procesar imágenes
-    obtener_descripcion_audio(rutas_audios) # devuelve lista de descripciones tras procesar audio
+def procesar_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->list:
+    fecha: str = obtener_timestamp(datos_Brutos[0])
+    direccion, localidad, provincia: str = obtener_direccion(latitud, longitud) # devuelve lista de dirección tras procesar latitud y longitud
+    patentes: str = obtener_patente(rutas_fotos) # devuelve lista de patentes tras procesar imágenes
+    descripciones_audios: str = obtener_descripcion_audio(rutas_audios) # devuelve lista de descripciones tras procesar audio
 
+    datos_Procesados: list = obtener_datos_procesados(datos_Brutos, fecha, direccion, localidad, provincia, patentes, descripciones_audios)
 
 def main()->None:
     datos_Brutos: list = leer_Archivo() # obtiene matríz, recibe ruta del archivo csv
