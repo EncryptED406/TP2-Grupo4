@@ -29,7 +29,6 @@ def escribir_archivo(denuncias_procesadas:list):
         print("Se produjo un error al generar el archivo")
 
 def obtener_descripcion_audio(rutas_audios:list)->list:
-    #correccion_rutas_acceso(rutas_audios)
 
     descripciones: list = []
     for ruta in range(len(rutas_audios)):
@@ -74,7 +73,6 @@ def muestra_mapa(datos_Brutos, datos_Procesados):
     lat = datos_Brutos[indice][2]
     long = datos_Brutos[indice][3]
     mostrar_mapa(lat, long)
-        
 def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->None:
 
     for registro in range(len(datos_Brutos)):
@@ -83,12 +81,26 @@ def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audio
         rutas_audios.append(datos_Brutos[registro][6])
         rutas_fotos.append(datos_Brutos[registro][4])
 
+def obtener_datos_Procesados(datos:list, fecha:list, direccion:list, localidad:list, provincia:list, patentes:list, descripciones_audios:list)->list:
+    desc_txt: list = datos[i][5]
+    for i in range(len(datos)):
+        datos[i][0] = fecha[i]
+        datos[i][2] = direccion[i]
+        datos[i][3] = localidad[i]
+        datos[i][4] = provincia[i]
+        datos[i][5] = patentes[i]
+        datos[i][6] = desc_txt[i]
+        datos[i][7] = descripciones_audios[i]
+    
+    return datos
 
-def procesar_Datos(latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->list:
-    obtener_direccion(latitud, longitud) # devuelve lista de dirección tras procesar latitud y longitud
-    obtener_patente(rutas_fotos) # devuelve lista de patentes tras procesar imágenes
-    obtener_descripcion_audio(rutas_audios) # devuelve lista de descripciones tras procesar audio
+def procesar_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->list:
+    fecha: str = obtener_timestamp(datos_Brutos[0])
+    direccion, localidad, provincia: str = obtener_direccion(latitud, longitud) # devuelve lista de dirección tras procesar latitud y longitud
+    patentes: str = obtener_patente(rutas_fotos) # devuelve lista de patentes tras procesar imágenes
+    descripciones_audios: str = obtener_descripcion_audio(rutas_audios) # devuelve lista de descripciones tras procesar audio
 
+    datos_Procesados: list = obtener_datos_procesados(datos_Brutos, fecha, direccion, localidad, provincia, patentes, descripciones_audios)
 
 def main()->None:
     datos_Brutos: list = leer_Archivo() # obtiene matríz, recibe ruta del archivo csv
