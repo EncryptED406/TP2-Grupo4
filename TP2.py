@@ -25,6 +25,8 @@ def escribir_archivo(denuncias_procesadas:list):
         print("Se produjo un error al generar el archivo")
 
 def obtener_descripcion_audio(rutas_audios:list)->list:
+    #correccion_rutas_acceso(rutas_audios)
+
     descripciones: list = []
     for ruta in range(len(rutas_audios)):
         r = sr.Recognizer()
@@ -32,10 +34,12 @@ def obtener_descripcion_audio(rutas_audios:list)->list:
         with sr.AudioFile(rutas_audios[ruta]) as source:
             audio = r.record(source)
         
-        descripcion: str = r.recognize_google(audio)
+        descripcion: str = r.recognize_google(audio, language ='es_AR')
+        
         descripciones.append(descripcion)
-    
+
     return descripciones
+
         
 def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->None:
 
@@ -50,7 +54,6 @@ def procesar_Datos(latitud: list, longitud: list, rutas_audios: list, rutas_foto
     obtener_direccion(latitud, longitud) # devuelve lista de dirección tras procesar latitud y longitud
     obtener_patente(rutas_fotos) # devuelve lista de patentes tras procesar imágenes
     obtener_descripcion_audio(rutas_audios) # devuelve lista de descripciones tras procesar audio
-
 
 
 def main()->None:
