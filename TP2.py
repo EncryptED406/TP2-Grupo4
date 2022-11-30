@@ -25,7 +25,6 @@ def escribir_archivo(denuncias_procesadas:list):
         print("Se produjo un error al generar el archivo")
 
 def obtener_descripcion_audio(rutas_audios:list)->list:
-    #correccion_rutas_acceso(rutas_audios)
 
     descripciones: list = []
     for ruta in range(len(rutas_audios)):
@@ -39,7 +38,6 @@ def obtener_descripcion_audio(rutas_audios:list)->list:
         descripciones.append(descripcion)
 
     return descripciones
-
         
 def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->None:
 
@@ -49,8 +47,18 @@ def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audio
         rutas_audios.append(datos_Brutos[registro][6])
         rutas_fotos.append(datos_Brutos[registro][4])
 
-def obtener_datos_Procesados(datos_Brutos:list, fecha:list, direccion:list, localidad:list, provincia:list, patentes:list, descripciones_audios:list)->list:
-    pass
+def obtener_datos_Procesados(datos:list, fecha:list, direccion:list, localidad:list, provincia:list, patentes:list, descripciones_audios:list)->list:
+    desc_txt: list = datos[i][5]
+    for i in range(len(datos)):
+        datos[i][0] = fecha[i]
+        datos[i][2] = direccion[i]
+        datos[i][3] = localidad[i]
+        datos[i][4] = provincia[i]
+        datos[i][5] = patentes[i]
+        datos[i][6] = desc_txt[i]
+        datos[i][7] = descripciones_audios[i]
+    
+    return datos
 
 def procesar_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->list:
     fecha: str = obtener_timestamp(datos_Brutos[0])
