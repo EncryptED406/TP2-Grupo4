@@ -1,5 +1,9 @@
 import csv
 import speech_recognition as sr
+from geopy.geocoders import Nominatim
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+from PIL import Image
 
 def lectura_archivo(archivo:str)->list:
     denuncias:list=[]
@@ -38,7 +42,37 @@ def obtener_descripcion_audio(rutas_audios:list)->list:
         descripciones.append(descripcion)
 
     return descripciones
-        
+
+def mostrar_foto_patente(ruta_foto: str):
+    print("\nLa imágen asociada a la patente indicada es la siguiente: ")
+    im = Image.open(ruta_foto) 
+    im.show()
+
+def mostrar_mapa(lat: str, long: str):
+    print("\nA continucación, un mapa con la ubicación del auto indicado, en el momento de la denuncia: ")
+    
+    map = Basemap(width=9000000,height=5000000,projection='lcc',
+            resolution=None,lat_1=-30.,lat_2=-40,lat_0=-35,lon_0=-60.)
+    plt.figure(figsize=(19,20))
+    map.bluemarble()
+    x, y = map(long, lat)
+    map.plot(x,y,marker='o',color='Red',markersize=5)
+    ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=-35))
+    ax.set_extent([-100, 30, 0, 80], crs=ccrs.PlateCarree())
+    plt.annotate("denuncia", xy = (x,y), xytext=(-20,20))
+    plt.show()
+
+def muestra_mapa(datos_Brutos, datos_Procesados):
+    patente: str = input("Ingrese la patente: ")
+    for i in range(len(datos_Procesados)):
+        if datos_Procesados[i][5]==patente:
+            indice: int = i
+    ruta_foto: str = datos_Brutos[i][4]
+    mostrar_foto_patente(ruta_foto)
+
+    lat = datos_Brutos[indice][2]
+    long = datos_Brutos[indice][3]
+    mostrar_mapa(lat, long)
 def obtener_Datos(datos_Brutos: list, latitud: list, longitud: list, rutas_audios: list, rutas_fotos: list)->None:
 
     for registro in range(len(datos_Brutos)):
