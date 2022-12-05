@@ -348,7 +348,6 @@ def main()->None:
 	longitud: list = []
 	rutas_audios: list = []
 	rutas_fotos: list = []
-
 	obtener_datos_Brutos(datos_Brutos, timestamps, latitud, longitud, rutas_audios, rutas_fotos)
 	
 	fechas: list = obtener_timestamp(timestamps)
@@ -363,26 +362,21 @@ def main()->None:
 
 	escribir_archivo(datos_Procesados)
 	eje_y: list = calcular_denuncias_mensuales(fechas)
-	graficar_denuncias_mensuales(eje_y)
 
-	opciones = ["PUNTO 1", "PUNTO 2", "PUNTO 3", "PUNTO 4","PUNTO 5","PUNTO 6","PUNTO 7"]
+	opciones = ["1) Mostrar infracciones en estadios", "2) Mostar infracciones en zona centro","3) Buscar patente sospechosa","4) Localizar infractor","5) Graficar denuncias mensuales"]
 
 	op = menu(opciones)
 
 	while op != 0:
         if op == 1:
-            pass
-        elif op == 2:
-            pass
-        elif op == 3:
             infracciones_estadios(datos_Procesados)
-        elif op == 4:
+        elif op == 2:
             infracciones_del_centro(datos_Procesados)
-        elif op == 5:
+        elif op == 3:
             patente_sospechosa()
-        elif op == 6:
+        elif op == 4:
             mostrar_infractor(datos_Brutos, datos_Procesados)
-        elif op == 7:
+        elif op == 5:
             graficar_denuncias_mensuales(eje_y)
         op = menu(opciones)
 
